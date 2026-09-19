@@ -6,6 +6,14 @@
  */
 import { COUNTRIES } from './countries.js';
 
+function resolveApiUrl() {
+  if (typeof window === 'undefined') return 'http://localhost:3000';
+  if (window.CHAPA_API_URL) return window.CHAPA_API_URL;
+  const host = window.location.hostname;
+  if (!host || host === 'localhost' || host === '127.0.0.1') return 'http://localhost:3000';
+  return `${window.location.protocol}//api.${host.replace(/^www\./, '')}`;
+}
+
 export const APP_CONFIG = {
   name: 'ChapaTuCancha',          // Nombre de la marca (aparece en logo, títulos, códigos)
   nameParts: ['Chapa', 'Tu', 'Cancha'], // Partes del nombre en el logo: "Chapa" (verde oscuro) + "Tu" (verde brillante) + "Cancha" (amarillo)
@@ -16,7 +24,11 @@ export const APP_CONFIG = {
   daysAheadForBooking: 14,        // Cuántos días hacia adelante se puede reservar
   supportWhatsApp: '51999999999', // Número de contacto (ficticio)
   // URL de la API (carpeta server/). En producción pon aquí el dominio del backend, ej. 'https://api.chapatucancha.pe'
-  apiUrl: (typeof window !== 'undefined' && window.CHAPA_API_URL) || 'http://localhost:3000',
+  /**
+   * URL de la API. En desarrollo apunta a localhost; en producción, a "api." + el dominio
+   * de la web (dondepelotear.com → https://api.dondepelotear.com). Se puede forzar con window.CHAPA_API_URL.
+   */
+  apiUrl: resolveApiUrl(),
 };
 
 /** Devuelve la configuración del país activo (moneda, ciudades, distritos, etc.) */
