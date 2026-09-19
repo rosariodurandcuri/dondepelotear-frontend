@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2FB35B"/><stop offset="1" stop-color="#1B7A3E"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#g)"/>
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.85" stroke-width="4">
+    <rect x="60" y="50" width="680" height="400"/>
+    <line x1="400" y1="50" x2="400" y2="450"/>
+    <circle cx="400" cy="250" r="70"/>
+    <rect x="60" y="150" width="110" height="200"/>
+    <rect x="630" y="150" width="110" height="200"/>
+  </g>
+  <text x="400" y="480" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" fill="#ffffff" fill-opacity="0.9">Foto no disponible</text>
+</svg>

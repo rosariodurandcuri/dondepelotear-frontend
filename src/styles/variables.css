@@ -1,0 +1,104 @@
+/* =====================================================================
+   IDENTIDAD VISUAL — ChapaTuCancha
+   Paleta "naranja energía": verde césped de base, naranja para acciones
+   y acentos (botones, precios, parte destacada del logo).
+   Cambia estos valores para modificar el aspecto de toda la app.
+   ===================================================================== */
+/* Fuentes del logotipo (archivos locales en assets/fonts).
+   - "Finger Printed" (DaFont): textura de huella dactilar.
+   - "Braaap" S2 / S4 / S11 (Youssef Habchi): itálica con líneas de velocidad (S2 = pocas, S11 = muchas).
+   - "HotSweat" (DaFont): letras gruesas con gotas de sudor. */
+@font-face { font-family: 'Finger Printed'; src: url('../../assets/fonts/FingerPrinted.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Braaap S2';  src: url('../../assets/fonts/Braaap-S2.otf') format('opentype'); font-display: swap; }
+@font-face { font-family: 'Braaap S4';  src: url('../../assets/fonts/Braaap-S4.otf') format('opentype'); font-display: swap; }
+@font-face { font-family: 'Braaap S11'; src: url('../../assets/fonts/Braaap-S11.otf') format('opentype'); font-display: swap; }
+@font-face { font-family: 'HotSweat'; src: url('../../assets/fonts/HotSweat.ttf') format('truetype'); font-display: swap; }
+
+:root {
+  /* Verde césped */
+  --green-950: #06180d;
+  --green-900: #0b3d20;
+  --green-800: #0f5a2c;
+  --green-700: #15803d;
+  --green-600: #16a34a;   /* principal */
+  --green-500: #22c55e;
+  --green-400: #4ade80;
+  --green-200: #bbf7d0;
+  --green-100: #dcfce7;
+  --green-50: #f0fdf4;
+
+  /* Naranja energía (acción / acento) */
+  --orange-700: #c2410c;
+  --orange-600: #ea580c;
+  --orange-500: #f97316;   /* principal */
+  --orange-400: #fb923c;
+  --orange-100: #ffedd5;
+  --orange-50: #fff7ed;
+
+  /* Neutros (con un ligero tinte verde) */
+  --dark: #0f1a14;
+  --gray-900: #16211b;
+  --gray-800: #263129;
+  --gray-700: #3d4a42;
+  --gray-600: #55635b;
+  --gray-500: #6f7d75;
+  --gray-400: #98a59d;
+  --gray-300: #cdd6d0;
+  --gray-200: #e3e9e5;
+  --gray-100: #f1f5f2;
+  --gray-50: #f8faf8;
+  --white: #ffffff;
+
+  /* Estados */
+  --blue-600: #2563eb;   /* reservado */
+  --blue-100: #dbeafe;
+  --red-600: #dc2626;    /* bloqueado / error */
+  --red-100: #fee2e2;
+  --amber-600: #d97706;  /* pendiente */
+  --amber-100: #fef3c7;
+  --star: #f59e0b;
+
+  /* Alias semánticos */
+  --color-primary: var(--orange-500);
+  --color-primary-hover: var(--orange-600);
+  --color-primary-soft: var(--orange-100);
+  --color-primary-softer: var(--orange-50);
+  --color-primary-text: var(--orange-700);
+  --color-text: var(--gray-900);
+  --color-text-muted: var(--gray-500);
+  --color-border: var(--gray-200);
+  --color-bg: var(--gray-50);
+  --color-surface: var(--white);
+
+  /* Tipografía y formas */
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Logotipo: fuente y efectos. Para volver a la huella: --font-logo: 'Finger Printed'; --logo-filter: url(#logo-worn); --logo-prints: block; --logo-stroke: 0.7px */
+  --font-logo: 'HotSweat', 'Nunito', var(--font);
+  --logo-filter: none;      /* url(#logo-worn) = desgastado */
+  --logo-prints: none;      /* block = huellas dactilares delante del texto */
+  --logo-stroke: 0px;       /* contorno que engrosa las letras */
+  --logo-size-sm: 24px;     /* tamaño del nombre en móvil (Finger Printed: 28px) */
+  --logo-size-md: 30px;     /* tamaño del nombre en escritorio (Finger Printed: 34px) */
+  --logo-text-offset: 0; /* hueco a la izquierda para que las líneas de velocidad no pisen el ícono (Finger Printed: 0) */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-full: 999px;
+  --shadow-xs: 0 1px 2px rgba(15, 26, 20, 0.05);
+  --shadow-sm: 0 1px 3px rgba(15, 26, 20, 0.06), 0 1px 2px rgba(15, 26, 20, 0.04);
+  --shadow: 0 6px 20px -4px rgba(15, 26, 20, 0.10), 0 2px 6px rgba(15, 26, 20, 0.05);
+  --shadow-lg: 0 20px 45px -12px rgba(15, 26, 20, 0.22);
+  --ring: 0 0 0 3px rgba(249, 115, 22, 0.22);
+
+  --header-height: 68px;
+  --container: 1200px;
+  --transition: 160ms ease;
+
+  /* Alturas de controles (consistencia en toda la app) */
+  --control-h: 46px;
+  --control-h-sm: 38px;
+  --control-h-lg: 54px;
+}

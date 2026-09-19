@@ -1,0 +1,6 @@
+# Sistema
+.DS_Store
+# Configuración local del editor / asistente
+.claude/
+# El backend vive en su propio repositorio (dondepelotear-backend)
+server/
