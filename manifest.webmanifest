@@ -1,6 +1,6 @@
 {
-  "name": "ChapaTuCancha",
-  "short_name": "ChapaTuCancha",
+  "name": "DondePelotear",
+  "short_name": "DondePelotear",
   "description": "Encuentra y reserva canchas de fútbol en todo el Perú",
   "start_url": "./",
   "display": "standalone",

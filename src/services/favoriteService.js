@@ -5,7 +5,7 @@
  */
 import { api, getToken } from './api.js';
 
-const KEY = 'chapatucancha:favorites';
+const KEY = 'dondepelotear:favorites';
 
 export function getFavorites() {
   try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; }

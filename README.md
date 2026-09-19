@@ -1,4 +1,4 @@
-# ChapaTuCancha — MVP
+# DondePelotear
 
 Plataforma web para encontrar y reservar canchas de fútbol 7 y fútbol 11 en **todo el Perú** (preparada para otros países).
 

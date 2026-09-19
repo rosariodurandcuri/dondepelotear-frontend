@@ -8,7 +8,7 @@
  */
 import { APP_CONFIG } from '../config/app.js';
 
-const TOKEN_KEY = 'chapatucancha:token';
+const TOKEN_KEY = 'dondepelotear:token';
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);

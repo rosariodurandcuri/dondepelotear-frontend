@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Servidor local para ChapaTuCancha (no requiere instalar nada).
+Servidor local para DondePelotear (no requiere instalar nada).
 Uso:   python3 serve.py          → abre http://localhost:5173
        python3 serve.py 8080     → usa otro puerto
        PORT=8080 python3 serve.py → también acepta la variable de entorno PORT
@@ -28,7 +28,7 @@ class Handler(SimpleHTTPRequestHandler):
 if __name__ == "__main__":
     handler = functools.partial(Handler, directory=ROOT)
     server = ThreadingHTTPServer(("127.0.0.1", PORT), handler)
-    print(f"ChapaTuCancha corriendo en http://localhost:{PORT}  (Ctrl+C para detener)")
+    print(f"DondePelotear corriendo en http://localhost:{PORT}  (Ctrl+C para detener)")
     sys.stdout.flush()
     try:
         server.serve_forever()

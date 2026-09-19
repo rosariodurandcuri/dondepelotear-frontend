@@ -10,7 +10,7 @@ import { api, getToken, setToken } from './api.js';
 import { ROLES } from '../config/constants.js';
 import { syncFavoritesFromServer } from './favoriteService.js';
 
-const USER_KEY = 'chapatucancha:user';
+const USER_KEY = 'dondepelotear:user';
 const listeners = new Set();
 let currentUser = readStoredUser();
 

@@ -12,7 +12,7 @@
 import { scrollTop } from './utils/dom.js';
 import { APP_CONFIG } from './config/app.js';
 
-/** Cambia el título de la pestaña: setPageTitle('Cancha El Campeón') → "Cancha El Campeón · ChapaTuCancha" */
+/** Cambia el título de la pestaña: setPageTitle('Cancha El Campeón') → "Cancha El Campeón · DondePelotear" */
 export function setPageTitle(text = '') {
   document.title = text ? `${text} · ${APP_CONFIG.name}` : `${APP_CONFIG.name} — ${APP_CONFIG.tagline}`;
 }

@@ -9,7 +9,7 @@ import { api, ApiError } from './api.js';
 import { BOOKING_STATUS } from '../config/constants.js';
 import { isPastEnd } from '../utils/dates.js';
 
-const GUEST_KEY = 'chapatucancha:guestBookings'; // códigos de reservas hechas sin cuenta en este navegador
+const GUEST_KEY = 'dondepelotear:guestBookings'; // códigos de reservas hechas sin cuenta en este navegador
 
 /** Estado a mostrar: una reserva confirmada cuya hora ya pasó se muestra como Completada */
 export function getDisplayStatus(booking) {

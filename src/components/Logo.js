@@ -1,5 +1,5 @@
 /**
- * LOGO — insignia con arco, red y balón clásico. El nombre se toma de la configuración.
+ * LOGO — pin de ubicación con balón clásico (dónde pelotear). El nombre se toma de la configuración.
  */
 import { html, raw } from '../utils/dom.js';
 import { APP_CONFIG } from '../config/app.js';
@@ -25,21 +25,11 @@ function ballSvg(clipId) {
 export function logoIcon(size = 30) {
   const clipId = `logo-ball-clip-${++iconCount}`; // el logo se dibuja en header y footer: cada uno necesita su propio id
   return raw(`<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true">
-    <!-- Insignia: césped, arco con red y balón -->
-    <rect x="4" y="4" width="56" height="56" rx="14" fill="#16a34a"/>
-    <path d="M4 44h56v2a14 14 0 0 1-14 14H18A14 14 0 0 1 4 46z" fill="#15803d"/>
-    <!-- Red -->
-    <g stroke="#fff" stroke-width="1.1" opacity="0.5">
-      <line x1="20" y1="18" x2="20" y2="46"/><line x1="26" y1="18" x2="26" y2="46"/><line x1="32" y1="18" x2="32" y2="46"/><line x1="38" y1="18" x2="38" y2="46"/><line x1="44" y1="18" x2="44" y2="46"/>
-      <line x1="14" y1="25" x2="50" y2="25"/><line x1="14" y1="32" x2="50" y2="32"/><line x1="14" y1="39" x2="50" y2="39"/>
-    </g>
-    <!-- Postes y travesaño -->
-    <path d="M14 47V18h36v29" fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>
-    <!-- Línea de gol -->
-    <line x1="9" y1="47" x2="55" y2="47" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
-    <!-- Balón con sombra -->
-    <ellipse cx="42.5" cy="54.5" rx="10" ry="2.3" fill="#0b3d20" opacity="0.35"/>
-    <g transform="translate(30 31) scale(0.62)">${ballSvg(clipId)}</g>
+    <!-- Pin de ubicacion ("donde") con un balon clasico dentro -->
+    <path d="M32 2C19.3 2 9 12.1 9 24.6 9 41.5 32 62 32 62s23-20.5 23-37.4C55 12.1 44.7 2 32 2z" fill="#16a34a"/>
+    <path d="M32 6C21.5 6 13 14.3 13 24.6 13 36.9 27.5 52.4 32 57c4.5-4.6 19-20.1 19-32.4C51 14.3 42.5 6 32 6z" fill="#22c55e" opacity="0.55"/>
+    <g transform="translate(15 8.5) scale(0.85)">${ballSvg(clipId)}</g>
+    <circle cx="32" cy="54" r="2.4" fill="#f97316"/>
   </svg>`);
 }
 
