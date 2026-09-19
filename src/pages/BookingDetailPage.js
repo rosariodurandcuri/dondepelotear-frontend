@@ -8,7 +8,8 @@ import { showToast } from '../components/Toast.js';
 import { confirmDialog } from '../components/Modal.js';
 import { getBookingByCode, cancelBooking } from '../services/bookingService.js';
 import { BOOKING_STATUS, BOOKING_STATUS_LABELS, fieldTypesLabel } from '../config/constants.js';
-import { formatPrice, formatLocation, formatBookingSlots } from '../utils/format.js';
+import { formatPrice, formatLocation, formatBookingSlots, whatsappLink, whatsappBookingMessage } from '../utils/format.js';
+import { getFieldById } from '../services/fieldService.js';
 import { formatDateLong, isPastEnd } from '../utils/dates.js';
 import { getPaymentMethod } from '../services/paymentService.js';
 import { MapPreview, mountFieldMap } from '../components/MapPreview.js';
@@ -27,6 +28,8 @@ export default async function BookingDetailPage(root, { params }) {
     }
     const field = booking.field || { name: 'Cancha eliminada', address: '—', district: '', province: '', department: '', images: [], latitude: null, longitude: null };
     const canCancel = booking.status === BOOKING_STATUS.CONFIRMED && !isPastEnd(booking.date, booking.endTime);
+    const enriched = booking.field ? await getFieldById(booking.field.id).catch(() => null) : null;
+    const waLink = booking.field ? whatsappLink(enriched?.contactWhatsApp || booking.field.whatsapp, whatsappBookingMessage(booking, booking.field)) : '';
 
     render(root, html`
       <div class="container page" style="max-width:760px">
@@ -46,14 +49,15 @@ export default async function BookingDetailPage(root, { params }) {
             <div class="detail-line">${icon('calendar')} ${formatDateLong(booking.date)}</div>
             <div class="detail-line">${icon('clock')} ${formatBookingSlots(booking)}</div>
             <div class="detail-line">${icon('mapPin')} ${field.address}, ${formatLocation(field, { full: true })}</div>
-            <div class="detail-line">${icon('money')} ${formatPrice(booking.totalPrice)} · ${getPaymentMethod(booking.paymentMethod).label} ${booking.paymentStatus === 'PAID' ? '(pagado)' : '(pago pendiente)'}</div>
-            <div class="detail-line">${icon('user')} ${booking.customer.firstName} ${booking.customer.lastName} · ${booking.customer.phone} · ${booking.customer.email}</div>
+            <div class="detail-line">${icon('money')} ${formatPrice(booking.totalPrice)} · ${booking.paymentMethod === 'onsite' ? 'Pago en la cancha' : `${getPaymentMethod(booking.paymentMethod).label} ${booking.paymentStatus === 'PAID' ? '(pagado)' : '(pago pendiente)'}`}</div>
+            <div class="detail-line">${icon('user')} ${[booking.customer.firstName, booking.customer.lastName].filter(Boolean).join(' ')} · ${booking.customer.phone} · ${booking.customer.email}</div>
           </div>
         </div>
 
         ${booking.field ? MapPreview(field) : ''}
 
         <div class="flex gap-1 flex-wrap mt-3">
+          ${waLink && canCancel ? html`<a class="btn btn-whatsapp" href="${waLink}" target="_blank" rel="noopener">${icon('whatsapp')} Avisar al encargado</a>` : ''}
           ${booking.field ? html`<a href="#/cancha/${field.id}" class="btn btn-outline">Ver cancha</a>` : ''}
           ${canCancel ? html`<button class="btn btn-danger" data-cancel>Cancelar reserva</button>` : ''}
         </div>

@@ -6,7 +6,8 @@ import { icon } from '../components/icons.js';
 import { EmptyState } from '../components/EmptyState.js';
 import { getBookingByCode } from '../services/bookingService.js';
 import { fieldTypesLabel } from '../config/constants.js';
-import { formatPrice, formatLocation, formatBookingSlots } from '../utils/format.js';
+import { formatPrice, formatLocation, formatBookingSlots, whatsappLink, whatsappBookingMessage } from '../utils/format.js';
+import { getFieldById } from '../services/fieldService.js';
 import { formatDateMedium } from '../utils/dates.js';
 import { getPaymentMethod } from '../services/paymentService.js';
 
@@ -17,6 +18,9 @@ export default async function ConfirmationPage(root, { params }) {
     return;
   }
   const { field } = booking;
+  // Número de WhatsApp del encargado (la cancha o su propietario)
+  const enriched = await getFieldById(field.id).catch(() => null);
+  const waLink = whatsappLink(enriched?.contactWhatsApp || field.whatsapp, whatsappBookingMessage(booking, field));
 
   render(root, html`
     <div class="container">
@@ -32,8 +36,8 @@ export default async function ConfirmationPage(root, { params }) {
             <div class="detail-line">${icon('calendar')} ${formatDateMedium(booking.date)}</div>
             <div class="detail-line">${icon('clock')} ${formatBookingSlots(booking)}</div>
             <div class="detail-line">${icon('mapPin')} ${field.address}, ${formatLocation(field)}</div>
-            <div class="detail-line">${icon('money')} ${formatPrice(booking.totalPrice)} · ${getPaymentMethod(booking.paymentMethod).label} ${booking.paymentStatus === 'PAID' ? '(pagado)' : '(pago pendiente)'}</div>
-            <div class="detail-line">${icon('user')} ${booking.customer.firstName} ${booking.customer.lastName} · ${booking.customer.phone}</div>
+            <div class="detail-line">${icon('money')} ${formatPrice(booking.totalPrice)} · ${booking.paymentMethod === 'onsite' ? 'Pago en la cancha' : `${getPaymentMethod(booking.paymentMethod).label} ${booking.paymentStatus === 'PAID' ? '(pagado)' : '(pago pendiente)'}`}</div>
+            <div class="detail-line">${icon('user')} ${[booking.customer.firstName, booking.customer.lastName].filter(Boolean).join(' ')} · ${booking.customer.phone}</div>
 
             <div class="booking-code">
               <span>Código de reserva</span>
@@ -41,6 +45,10 @@ export default async function ConfirmationPage(root, { params }) {
             </div>
           </div>
         </div>
+
+        ${waLink ? html`
+          <a class="btn btn-whatsapp btn-lg btn-block mt-3" href="${waLink}" target="_blank" rel="noopener">${icon('whatsapp')} Avisar al encargado por WhatsApp</a>
+          <p class="text-xs text-muted mt-1">Se abre WhatsApp con un mensaje listo con los datos de tu reserva para que la cancha te confirme.</p>` : ''}
 
         <div class="confirmation-actions">
           <a href="#/reservas/${booking.bookingCode}" class="btn btn-outline btn-lg">Ver reserva</a>

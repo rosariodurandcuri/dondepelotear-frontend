@@ -10,7 +10,6 @@ import { showToast } from '../components/Toast.js';
 import { getFieldById } from '../services/fieldService.js';
 import { areSlotsAvailable } from '../services/availabilityService.js';
 import { createBooking } from '../services/bookingService.js';
-import { PAYMENT_METHODS } from '../services/paymentService.js';
 import { getCurrentUser } from '../services/authService.js';
 import { fieldTypesLabel } from '../config/constants.js';
 import { formatPrice, hasPrice, formatLocation } from '../utils/format.js';
@@ -49,7 +48,7 @@ export default async function BookingPage(root, { params, query }) {
   const hours = totalHours(blocks);
   const total = hours * field.pricePerHour;
   const slotsLabel = blocks.map((b) => `${b.startTime} - ${b.endTime}`).join(' · ');
-  const [firstName = '', ...rest] = (user?.name || '').split(' ');
+  const fullName = user?.name || '';
 
   render(root, html`
     <div class="container booking-page">
@@ -60,39 +59,33 @@ export default async function BookingPage(root, { params, query }) {
         <div class="card">
           <div class="card-body">
             <h1 class="card-title" style="font-size:22px">Completa tus datos</h1>
-            <p class="text-muted text-small mb-3">Te enviaremos la confirmación y el código de reserva a tu correo.</p>
+            <p class="text-muted text-small mb-3">Solo necesitamos tu nombre y un número de contacto. El pago se coordina directamente en la cancha.</p>
 
             <form data-booking-form novalidate>
               <div data-form-error></div>
               <div class="form-row">
                 <div class="form-group">
-                  <label class="form-label" for="firstName">Nombre</label>
-                  <input class="form-control" id="firstName" name="firstName" placeholder="Ej. Juan" value="${firstName}" required />
+                  <label class="form-label" for="fullName">Nombre</label>
+                  <div class="input-icon">
+                    ${icon('user')}
+                    <input class="form-control" id="fullName" name="fullName" placeholder="Ej. Juan Pérez" value="${fullName}" required autocomplete="name" />
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="lastName">Apellido</label>
-                  <input class="form-control" id="lastName" name="lastName" placeholder="Ej. Pérez" value="${rest.join(' ')}" required />
-                </div>
-              </div>
-              <div class="form-row">
                 <div class="form-group">
                   <label class="form-label" for="phone">Teléfono / WhatsApp</label>
-                  <input class="form-control" id="phone" name="phone" type="tel" inputmode="numeric" placeholder="987 654 321" value="${user?.phone || ''}" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="email">Correo electrónico</label>
-                  <input class="form-control" id="email" name="email" type="email" placeholder="tucorreo@ejemplo.com" value="${user?.email || ''}" required />
+                  <div class="input-icon">
+                    ${icon('phone')}
+                    <input class="form-control" id="phone" name="phone" type="tel" inputmode="numeric" placeholder="987 654 321" value="${user?.phone || ''}" required autocomplete="tel" />
+                  </div>
                 </div>
               </div>
 
-              <h2 class="card-title mt-3">Método de pago</h2>
-              <div class="payment-methods">
-                ${PAYMENT_METHODS.map((m, i) => html`
-                  <label class="option-card">
-                    <input type="radio" name="paymentMethod" value="${m.id}" ${i === 0 ? 'checked' : ''} />
-                    <strong>${m.label}</strong>
-                    <span>${m.description}</span>
-                  </label>`)}
+              <div class="booking-pay-note">
+                ${icon('money', 'icon')}
+                <div>
+                  <strong>Pago en la cancha</strong>
+                  <span>Pagas al llegar, directamente al encargado. Sin cobros por adelantado.</span>
+                </div>
               </div>
 
               <button type="submit" class="btn btn-primary btn-lg btn-block mt-3" data-submit>Confirmar reserva</button>
@@ -102,21 +95,34 @@ export default async function BookingPage(root, { params, query }) {
         </div>
 
         <aside class="card booking-summary-card">
+          <div class="booking-summary-hero">
+            <img src="${field.images?.[0] || PLACEHOLDER_IMAGE}" alt="${field.name}" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMAGE}'" />
+            <div class="booking-summary-hero-text">
+              <span class="badge badge-dark">${fieldTypesLabel(field)}</span>
+              <strong>${field.name}</strong>
+              <span>${icon('mapPin', 'icon icon-xs')} ${formatLocation(field)}</span>
+            </div>
+          </div>
           <div class="card-body">
-            <div class="field-thumb">
-              <img src="${field.images?.[0] || PLACEHOLDER_IMAGE}" alt="${field.name}" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMAGE}'" />
-              <div>
-                <strong>${field.name}</strong>
-                <div class="text-small text-muted">${fieldTypesLabel(field)} · ${formatLocation(field)}</div>
+            <h2 class="booking-summary-title">Tu reserva</h2>
+            <div class="booking-summary-rows">
+              <div class="booking-summary-row">
+                <span class="booking-summary-icon">${icon('calendar', 'icon icon-sm')}</span>
+                <div><span>Fecha</span><strong>${formatDateLong(date)}</strong></div>
+              </div>
+              <div class="booking-summary-row">
+                <span class="booking-summary-icon">${icon('clock', 'icon icon-sm')}</span>
+                <div><span>${blocks.length > 1 ? 'Horarios' : 'Horario'}</span><strong>${blocks.map((b) => html`<em class="selected-block">${b.startTime} – ${b.endTime}</em>`)}</strong></div>
+              </div>
+              <div class="booking-summary-row">
+                <span class="booking-summary-icon">${icon('ball', 'icon icon-sm')}</span>
+                <div><span>Duración</span><strong>${hours} ${hours === 1 ? 'hora' : 'horas'} · ${formatPrice(field.pricePerHour)} por hora</strong></div>
               </div>
             </div>
-            <div class="summary-list">
-              <div class="summary-item"><span>Fecha</span><span>${formatDateLong(date)}</span></div>
-              <div class="summary-item"><span>${blocks.length > 1 ? 'Horarios' : 'Horario'}</span><span>${slotsLabel}</span></div>
-              <div class="summary-item"><span>Duración</span><span>${hours} ${hours === 1 ? 'hora' : 'horas'}</span></div>
-              <div class="summary-item"><span>Precio por hora</span><span>${formatPrice(field.pricePerHour)}</span></div>
+            <div class="booking-summary-total">
+              <div><span>Total a pagar</span><small>en la cancha, al llegar</small></div>
+              <strong>${formatPrice(total)}</strong>
             </div>
-            <div class="summary-total"><span>Total a pagar</span><span>${formatPrice(total)}</span></div>
           </div>
         </aside>
       </div>
@@ -139,9 +145,9 @@ export default async function BookingPage(root, { params, query }) {
         fieldId: field.id,
         date,
         slots: blocks.flatMap((b) => { const out = []; for (let t = b.startTime; t < b.endTime; t = `${String(Number(t.slice(0, 2)) + 1).padStart(2, '0')}:00`) out.push(t); return out; }),
-        customer: { firstName: data.firstName, lastName: data.lastName, phone: data.phone, email: data.email },
+        customer: { firstName: data.fullName.split(' ')[0], lastName: data.fullName.split(' ').slice(1).join(' '), phone: data.phone, email: user?.email || '' },
         userId: user?.id || null,
-        paymentMethod: data.paymentMethod,
+        paymentMethod: 'onsite', // el pago se realiza en la cancha
       });
       showToast('¡Reserva confirmada!', 'success');
       navigate(`/reserva-confirmada/${booking.bookingCode}`);

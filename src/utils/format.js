@@ -2,6 +2,7 @@
  * UTILIDADES DE FORMATO (moneda, teléfono, texto)
  */
 import { getCountry } from '../config/app.js';
+import { formatDateLong } from './dates.js';
 
 /** 100 → "S/ 100"   |  95.5 → "S/ 95.50"   |  null → "Consultar" (precio no publicado) */
 export function formatPrice(amount) {
@@ -89,6 +90,22 @@ export function whatsappLink(number, message = '') {
 /** Mensaje automático para consultar por una cancha */
 export function whatsappMessage(fieldName) {
   return `Hola, estoy interesado en alquilar la cancha ${fieldName}. Quisiera consultar sobre disponibilidad y precios.`;
+}
+
+/** Mensaje automático para avisar al encargado de la cancha con el detalle de la reserva */
+export function whatsappBookingMessage(booking, field) {
+  const name = [booking.customer?.firstName, booking.customer?.lastName].filter(Boolean).join(' ');
+  const slots = formatBookingSlots(booking, ' y ');
+  const hours = booking.hours || 1;
+  return [
+    `Hola, soy ${name}. Acabo de reservar en ${field?.name || 'su cancha'} a través de DondePelotear.`,
+    `📅 Fecha: ${formatDateLong(booking.date)}`,
+    `⏰ Horario: ${slots} (${hours} ${hours === 1 ? 'hora' : 'horas'})`,
+    `💰 Total: ${formatPrice(booking.totalPrice)} (pago en la cancha)`,
+    `📞 Mi teléfono: ${booking.customer?.phone || ''}`,
+    `🔖 Código de reserva: ${booking.bookingCode}`,
+    '¿Me confirman, por favor? ¡Gracias!',
+  ].join('\n');
 }
 
 /** Distancia aproximada en km entre dos coordenadas (fórmula de Haversine) */
